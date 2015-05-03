@@ -9,6 +9,7 @@ class DownloadTranslationsTask extends DefaultTask {
     def apiKey
     def projectId
     def renameMapping
+    def excludePattern
 
     @TaskAction
     def downloadTranslations() {
@@ -32,8 +33,12 @@ class DownloadTranslationsTask extends DefaultTask {
         //Extract to build dir/res
         ant.unzip(src:translationZip, dest:extractedDir, overwrite:true)
 
+        if(excludePattern == null){
+            excludePattern = ''
+        }
+
         ant.copy( todir: destination ){
-            fileset(dir:extractedDir, includes:'**/**')
+            fileset(dir:extractedDir, includes:'**/**', excludes:excludePattern)
             if(renameMapping != null){
                 regexpmapper(renameMapping)
             }
