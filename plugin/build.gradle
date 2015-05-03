@@ -1,0 +1,62 @@
+
+plugins {
+    id "com.jfrog.bintray" version "1.1"
+}
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //compile 'net.lingala.zip4j:zip4j:1.3.2'
+    compile gradleApi()
+    compile localGroovy()
+    testCompile 'junit:junit:4.11'
+}
+
+group = 'com.mendhak.gradlecrowdin'
+version = '0.0.1'
+project.archivesBaseName='crowdin-plugin'
+project.ext.set("version", '0.0.1')
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('repo'))
+        }
+    }
+}
+
+bintray {
+    user = BINTRAY_USERNAME
+    key = BINTRAY_APIKEY
+
+    filesSpec {
+        from 'repo'
+        into './'
+        //rename '(.+)\\.(.+)', '$1-suffix.$2'
+    }
+
+    dryRun = false //Whether to run this as dry-run, without deploying
+    publish = true //If version should be auto published after an upload
+
+    pkg {
+        repo = 'maven'
+        name = 'gradle-crowdin-plugin'
+        desc = 'Gradle plugin for Crowdin'
+        websiteUrl = 'https://github.com/mendhak/gradle-crowdin-plugin'
+        issueTrackerUrl = 'https://github.com/mendhak/gradle-crowdin-plugin/issues'
+        vcsUrl = 'https://github.com/mendhak/gradle-crowdin-plugin.git'
+        licenses = ['MIT']
+        labels = ['android', 'crowdin', 'plugin', 'gradle']
+        publicDownloadNumbers = true
+
+        version {
+            name = project.version
+            desc = 'Gradle Crowdin Plugin'
+            vcsTag = project.version
+        }
+    }
+}
