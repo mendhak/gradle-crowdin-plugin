@@ -8,6 +8,7 @@ class DownloadTranslationsTask extends DefaultTask {
     def destination
     def apiKey
     def projectId
+    def renameMapping
 
     @TaskAction
     def downloadTranslations() {
@@ -33,7 +34,10 @@ class DownloadTranslationsTask extends DefaultTask {
 
         ant.copy( todir: destination ){
             fileset(dir:extractedDir, includes:'**/**')
-            regexpmapper(from: '^(.*)/(.*)$', to: /values-\1\/\2/)
+            if(renameMapping != null){
+                regexpmapper(renameMapping)
+            }
+
         }
     }
 }
