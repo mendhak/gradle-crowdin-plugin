@@ -1,5 +1,6 @@
 package com.mendhak.gradlecrowdin
 
+import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
@@ -12,16 +13,12 @@ class DownloadTranslationsTask extends DefaultTask {
     def apiKey
     def projectId
 
-    File getDestination() {
-        project.file(destination)
-    }
-
     @TaskAction
     def downloadTranslations() {
 
 //        println(apiKey)
 //        println(projectId)
-        println(destination)
+//        println(destination)
 
         def buildSubDir = new File(project.buildDir.getPath() , "/crowdin-plugin")
         buildSubDir.mkdirs()
@@ -37,7 +34,22 @@ class DownloadTranslationsTask extends DefaultTask {
         file << new URL(url).openStream()
         file.close()
 
-        unzipFile(translationZip, buildSubDir)
+        //Extract to build dir/res
+        unzipFile(translationZip, new File(buildSubDir, "res"))
+
+        def list = []
+        def extractedDir = new File(buildSubDir, "res")
+        extractedDir.eachFileRecurse (FileType.FILES) { f ->
+            list << f
+        }
+
+        //Copy to values-XYZ in the destination folder
+        list.each {
+            def copyTo = new File(destination, "values-"+ it.getParentFile().getName() + "/" + it.getName() )
+            println copyTo.getPath()
+            new AntBuilder().copy( file:it.getPath(),
+                    tofile:copyTo.getPath())
+        }
     }
 
     def unzipFile(File zipFile, File outputFolder){
@@ -57,7 +69,7 @@ class DownloadTranslationsTask extends DefaultTask {
                 String fileName = ze.getName();
                 File newFile = new File(outputFolder, fileName);
 
-                println("Extracting : "+ newFile.getAbsoluteFile());
+                //println("Extracting : "+ newFile.getAbsoluteFile());
 
                 if(ze.isDirectory()){
                     newFile.mkdirs()

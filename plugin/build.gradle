@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    //compile 'net.lingala.zip4j:zip4j:1.3.2'
     compile gradleApi()
     compile localGroovy()
     testCompile 'junit:junit:4.11'
