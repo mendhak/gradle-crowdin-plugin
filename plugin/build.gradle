@@ -16,9 +16,9 @@ dependencies {
 }
 
 group = 'com.mendhak.gradlecrowdin'
-version = '0.0.1'
+version = '0.0.2'
 project.archivesBaseName='crowdin-plugin'
-project.ext.set("version", '0.0.1')
+project.ext.set("version", version)
 
 uploadArchives {
     repositories {
