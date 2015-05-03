@@ -6,26 +6,15 @@ This Gradle plugin adds tasks to upload and download translation files from crow
 `crowdinDownload` downloads the latest translations and `crowdinUpload` uploads a source file. 
 
 
-## Add to your build.gradle
+## Usage
 
-In your build.gradle's `buildScript` section, add this repository and classpath
+Add this to your build.gradle:
 
-    buildscript {
-        repositories {
-            ...
-            maven {
-                url  "http://dl.bintray.com/mendhak/maven"
-            }
-        }
-        dependencies {
-            ...
-            classpath group: 'com.mendhak.gradlecrowdin', name: 'crowdin-plugin', version: '0.0.3'
-        }
+    plugins {
+      id "com.mendhak.gradlecrowdin" version "0.0.4"
     }
 
-Then apply the plugin
-
-    apply plugin: 'com.mendhak.gradlecrowdin'
+For pre-Gradle-2.1, follow the [instructions here](https://plugins.gradle.org/plugin/com.mendhak.gradlecrowdin)
 
 ## Download task
 

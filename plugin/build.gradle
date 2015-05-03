@@ -1,9 +1,21 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+    }
+}
 
 plugins {
     id "com.jfrog.bintray" version "1.1"
 }
+
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: "com.gradle.plugin-publish"
 
 repositories {
     mavenCentral()
@@ -18,9 +30,11 @@ dependencies {
 }
 
 group = 'com.mendhak.gradlecrowdin'
-version = '0.0.3'
+version = '0.0.4'
 project.archivesBaseName='crowdin-plugin'
 project.ext.set("version", version)
+project.description='Gradle plugin for Crowdin.com, download and upload translation files'
+
 
 uploadArchives {
     repositories {
@@ -46,7 +60,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'gradle-crowdin-plugin'
-        desc = 'Gradle plugin for Crowdin'
+        desc = project.description
         websiteUrl = 'https://github.com/mendhak/gradle-crowdin-plugin'
         issueTrackerUrl = 'https://github.com/mendhak/gradle-crowdin-plugin/issues'
         vcsUrl = 'https://github.com/mendhak/gradle-crowdin-plugin.git'
@@ -56,8 +70,23 @@ bintray {
 
         version {
             name = project.version
-            desc = 'Gradle Crowdin Plugin'
+            desc = project.description
             vcsTag = project.version
         }
     }
+}
+
+pluginBundle {
+    website = 'https://github.com/mendhak/gradle-crowdin-plugin'
+    vcsUrl = 'https://github.com/mendhak/gradle-crowdin-plugin.git'
+    description = project.description
+    tags = ['android', 'crowdin', 'plugin', 'gradle']
+
+    plugins {
+        CrowdinPlugin {
+            id = 'com.mendhak.gradlecrowdin'
+            displayName = project.description
+        }
+    }
+
 }
