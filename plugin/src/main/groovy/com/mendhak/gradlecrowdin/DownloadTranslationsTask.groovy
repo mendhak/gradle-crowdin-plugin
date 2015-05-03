@@ -1,12 +1,8 @@
 package com.mendhak.gradlecrowdin
 
-import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream;
 
 class DownloadTranslationsTask extends DefaultTask {
     def destination
@@ -15,10 +11,6 @@ class DownloadTranslationsTask extends DefaultTask {
 
     @TaskAction
     def downloadTranslations() {
-
-//        println(apiKey)
-//        println(projectId)
-//        println(destination)
 
         def buildSubDir = new File(project.buildDir.getPath() , "/crowdin-plugin")
         buildSubDir.mkdirs()
@@ -34,21 +26,14 @@ class DownloadTranslationsTask extends DefaultTask {
         file << new URL(url).openStream()
         file.close()
 
-        //Extract to build dir/res
-        ant.unzip(src:translationZip, dest:new File(buildSubDir, "res"), overwrite:true)
-
-        def list = []
         def extractedDir = new File(buildSubDir, "res")
-        extractedDir.eachFileRecurse (FileType.FILES) { f ->
-            list << f
-        }
 
-        //Copy to values-XYZ in the destination folder
-        list.each {
-            def copyTo = new File(destination, "values-"+ it.getParentFile().getName() + "/" + it.getName() )
-            println copyTo.getPath()
-            ant.copy( file:it.getPath(), tofile:copyTo.getPath())
+        //Extract to build dir/res
+        ant.unzip(src:translationZip, dest:extractedDir, overwrite:true)
+
+        ant.copy( todir: destination ){
+            fileset(dir:extractedDir, includes:'**/**')
+            regexpmapper(from: '^(.*)/(.*)$', to: /values-\1\/\2/)
         }
     }
-
 }
