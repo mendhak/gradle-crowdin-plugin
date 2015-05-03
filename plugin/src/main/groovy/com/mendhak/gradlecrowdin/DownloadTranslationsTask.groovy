@@ -35,7 +35,7 @@ class DownloadTranslationsTask extends DefaultTask {
         file.close()
 
         //Extract to build dir/res
-        unzipFile(translationZip, new File(buildSubDir, "res"))
+        ant.unzip(src:translationZip, dest:new File(buildSubDir, "res"), overwrite:true)
 
         def list = []
         def extractedDir = new File(buildSubDir, "res")
@@ -47,51 +47,7 @@ class DownloadTranslationsTask extends DefaultTask {
         list.each {
             def copyTo = new File(destination, "values-"+ it.getParentFile().getName() + "/" + it.getName() )
             println copyTo.getPath()
-            new AntBuilder().copy( file:it.getPath(),
-                    tofile:copyTo.getPath())
-        }
-    }
-
-    def unzipFile(File zipFile, File outputFolder){
-
-        byte[] buffer = new byte[1024];
-
-        try{
-            if(!outputFolder.exists()){
-                outputFolder.mkdir();
-            }
-
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-            ZipEntry ze = zis.getNextEntry();
-
-            while(ze!=null){
-
-                String fileName = ze.getName();
-                File newFile = new File(outputFolder, fileName);
-
-                //println("Extracting : "+ newFile.getAbsoluteFile());
-
-                if(ze.isDirectory()){
-                    newFile.mkdirs()
-                }
-                else {
-                    new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-
-                    fos.close();
-                }
-                ze = zis.getNextEntry();
-            }
-
-            zis.closeEntry();
-            zis.close();
-
-        }catch(IOException ex){
-            ex.printStackTrace();
+            ant.copy( file:it.getPath(), tofile:copyTo.getPath())
         }
     }
 
