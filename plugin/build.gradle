@@ -30,7 +30,7 @@ dependencies {
 }
 
 group = 'com.mendhak.gradlecrowdin'
-version = '0.0.5'
+version = '0.0.6'
 project.archivesBaseName='crowdin-plugin'
 project.ext.set("version", version)
 project.description='Gradle plugin for Crowdin.com, download and upload translation files'
@@ -40,7 +40,31 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: uri('repo'))
+            pom.project {
+                name 'Gradle Crowdin Plugin'
+                description project.description
+                url 'https://github.com/mendhak/gradle-crowdin-plugin'
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    url 'https://github.com/mendhak/gradle-crowdin-plugin.git'
+                }
+                developers{
+                    developer{
+                        id 'mendhak'
+                        name 'Mendhak'
+                        url 'http://mendhak.com'
+
+                    }
+                }
+            }
         }
+
     }
 }
 
@@ -72,6 +96,10 @@ bintray {
             name = project.version
             desc = project.description
             vcsTag = project.version
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = BINTRAY_GPGSIGN_PASSPHRASE //Optional. The passphrase for GPG signing'
+            }
         }
     }
 }
