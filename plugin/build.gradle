@@ -30,7 +30,7 @@ dependencies {
 }
 
 group = 'com.mendhak.gradlecrowdin'
-version = '0.0.4'
+version = '0.0.5'
 project.archivesBaseName='crowdin-plugin'
 project.ext.set("version", version)
 project.description='Gradle plugin for Crowdin.com, download and upload translation files'
