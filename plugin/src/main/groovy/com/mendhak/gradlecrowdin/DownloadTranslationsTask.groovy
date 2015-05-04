@@ -19,21 +19,19 @@ class DownloadTranslationsTask extends DefaultTask {
 
         //Tell Crowdin to do an export
         def exportUrl = sprintf('http://api.crowdin.net/api/project/%s/export?key=%s', [projectId, apiKey])
-        new URL(exportUrl).getText()
+        ant.get(src: exportUrl, dest: new File(buildSubDir.getPath(), "export.xml"), verbose:'on')
 
         //Download actual zip file
         def url = sprintf('http://api.crowdin.net/api/project/%s/download/%s.zip?key=%s', [projectId, 'all', apiKey])
         def translationZip = new File(buildSubDir.getPath(), "translations.zip")
-        def file = translationZip.newOutputStream()
-        file << new URL(url).openStream()
-        file.close()
+        ant.get(src: url, dest: translationZip, verbose:'on')
         println "Translations downloaded"
 
+        //Extract
         def extractedDir = new File(buildSubDir, "res")
-
-        //Extract to build dir/res
         ant.unzip(src:translationZip, dest:extractedDir, overwrite:true)
 
+        //Copy to destination
         if(excludePattern == null){
             excludePattern = ''
         }
@@ -43,7 +41,6 @@ class DownloadTranslationsTask extends DefaultTask {
             if(renameMapping != null){
                 regexpmapper(renameMapping)
             }
-
             println "Copying to destination directory"
         }
 
