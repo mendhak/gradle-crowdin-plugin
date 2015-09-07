@@ -41,6 +41,8 @@ For example, Android projects would use `values-es` instead of `es`.  You can us
  
 You may also want to exclude certain files, you can do this using `excludePattern`.
 
+To exclude multiple files use commas or 1 space to seperate patterns e.g. `**/*.strings, **/*.json`
+
 ## Upload task
 
 Point this at your source file, such as `values/strings.xml` and the task will update it on crowdin. 
