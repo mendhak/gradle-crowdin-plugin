@@ -58,3 +58,23 @@ Note that the file must exist on crowdin, this simply acts as an updater.  New f
 In IDEA, the task should appear under the category crowdin as shown here
 
 ![idea](screenshot.png)
+
+## Building
+
+To build, run the uploadArchives task under upload.  This doesn't actually upload it anywhere, it just copies it to the 'repo' folder.
+ 
+To reference it in another project locally, modify the gradle file to look like so:
+ 
+    buildscript {
+        repositories {
+        mavenCentral()
+                maven {
+                    url uri('/home/mendhak/Code/gradle-crowdin-plugin/plugin/repo')
+                }
+        }
+        dependencies {
+            classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.7'
+        }
+    }
+    
+    apply plugin: 'com.mendhak.gradlecrowdin'
