@@ -41,6 +41,45 @@ For example, Android projects would use `values-es` instead of `es`.  You can us
  
 You may also want to exclude certain files, you can do this using `excludePattern`.
 
+## Android download task
+
+Crowdin gives `ru` files as well as `pt-BR` files.  You can get them both with two tasks.
+
+      task crowdin1(group:"crowdin", type:com.mendhak.gradlecrowdin.DownloadTranslationsTask){
+    
+                apiKey = CROWDIN_API_KEY
+                destination = "$projectDir/src/main/res"
+                projectId = 'gpslogger-for-android'
+    
+                //Android projects
+                renameMapping = [
+                        from: '^([^-]*)/strings.xml$',
+                        to  : /values-\1\/strings.xml/
+                ]
+    
+                excludePattern = '**/*.txt'
+        }
+    
+        task crowdin2(group:"crowdin", type:com.mendhak.gradlecrowdin.DownloadTranslationsTask, dependsOn:"crowdin1"){
+    
+            apiKey = CROWDIN_API_KEY
+            destination = "$projectDir/src/main/res"
+            projectId = 'gpslogger-for-android'
+    
+            //Android projects
+            renameMapping = [
+                    from: '^([^-]*)-([^-]*)/strings.xml$',
+                    to  : /values-\1-r\2\/strings.xml/
+            ]
+    
+            excludePattern = '**/*.txt'
+        }
+
+And then call it like so
+
+    task getallTranslations(group:"crowdin", dependsOn:"crowdin2")  {    }
+
+
 ## Upload task
 
 Point this at your source file, such as `values/strings.xml` and the task will update it on crowdin. 
