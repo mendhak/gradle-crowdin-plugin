@@ -79,7 +79,7 @@ And then call it like so
 
     task getallTranslations(group:"crowdin", dependsOn:"crowdin2")  {    }
 
-As an alternative you can go to the file settings on crowdin and set the resulting file name to something similar to "/app/src/main/res/values-%android_code%/strings.xml". Crowdin will then automatically generate the appropriate file structure inside the downloaded zip file. In the example file name you would have to also adjust the destination to "$projectDir".
+As an alternative you can go to the file settings on crowdin and set the resulting file name to something similar to `/app/src/main/res/values-%android_code%/strings.xml`. Crowdin will then automatically generate the appropriate file structure inside the downloaded zip file. In the example file name you would have to also adjust the destination to `"$projectDir"`.
 
 ## Upload task
 
