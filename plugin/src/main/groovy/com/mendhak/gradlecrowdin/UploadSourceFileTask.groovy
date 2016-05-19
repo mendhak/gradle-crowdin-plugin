@@ -9,18 +9,17 @@ import org.apache.http.entity.mime.content.FileBody
 import groovyx.net.http.Method
 import groovyx.net.http.ContentType
 
-class UploadSourceFileTask  extends DefaultTask {
+class UploadSourceFileTask extends DefaultTask {
     def apiKey
     def projectId
-    def sourceFile
+    def sourceFiles
 
     @SuppressWarnings(["unchecked", "GrUnresolvedAccess"])
     @TaskAction
     def uploadSourceFile() {
-
         def updateFilePath = sprintf('http://api.crowdin.net/api/project/%s/update-file?key=%s', [projectId, apiKey])
 
-        def http = new groovyx.net.http.HTTPBuilder( updateFilePath)
+        def http = new HTTPBuilder(updateFilePath)
 
         http.handler.failure = { resp, reader ->
             println "Could not upload file: ${resp.statusLine}"
@@ -28,21 +27,17 @@ class UploadSourceFileTask  extends DefaultTask {
             throw new GradleException("Could not upload file: ${resp.statusLine} \r\n " + reader)
         }
 
-        http.request( Method.POST, ContentType.ANY ) { req ->
-            //uri.path = updateFilePath
-            //requestContentType = 'multipart/form-data'
+        http.request(Method.POST, ContentType.ANY) { req ->
             MultipartEntity entity = new MultipartEntity()
-            def file = new File(sourceFile)
-            entity.addPart("files[" + file.getName() + "]", new FileBody(file))
+            sourceFiles.each { pair ->
+                def file = new File(pair[1])
+                entity.addPart("files[" + pair[0] + "]", new FileBody(file))
+            }
             req.entity = entity
 
             response.success = { resp, json ->
-                println file.getName() + " uploaded to crowdin"
+                println "Uploaded ${sourceFiles.size()} files to crowdin"
             }
         }
-
-
     }
-
 }
-

@@ -79,6 +79,7 @@ And then call it like so
 
     task getallTranslations(group:"crowdin", dependsOn:"crowdin2")  {    }
 
+As an alternative you can go to the file settings on crowdin and set the resulting file name to something similar to "/app/src/main/res/values-%android_code%/strings.xml". Crowdin will then automatically generate the appropriate file structure inside the downloaded zip file. In the example file name you would have to also adjust the destination to "$projectDir".
 
 ## Upload task
 
@@ -87,10 +88,13 @@ Point this at your source file, such as `values/strings.xml` and the task will u
     crowdinUpload {
         apiKey = "31727f222f203349979cf710a471b767"
         projectId = 'my-test-project'
-        sourceFile = "$projectDir/src/main/res/values/strings.xml"
+        sourceFiles = [
+            ['strings.xml', "$projectDir/src/main/res/values/strings.xml"]
+        ]
     }
 
 Note that the file must exist on crowdin, this simply acts as an updater.  New files are not created. 
+The sourceFiles expects a list of tuples where the first entry referrs to the file name used on crowdin and the second to the corresponding file in your project. This also allows you to batch upload strings.xml files from separate modules.
  
 ## Screenshot
  
