@@ -88,14 +88,67 @@ Point this at your source file, such as `values/strings.xml` and the task will u
     crowdinUpload {
         apiKey = "31727f222f203349979cf710a471b767"
         projectId = 'my-test-project'
-        sourceFiles = [
-            ['strings.xml', "$projectDir/src/main/res/values/strings.xml"]
+        files = [
+            [ name: 'strings.xml', source: 'app/src/main/res/values/strings.xml' ]
         ]
     }
 
-Note that the file must exist on crowdin, this simply acts as an updater.  New files are not created. 
-The sourceFiles expects a list of tuples where the first entry referrs to the file name used on crowdin and the second to the corresponding file in your project. This also allows you to batch upload strings.xml files from separate modules.
- 
+Note that the file must exist on crowdin, this simply acts as an updater. New files are not created.
+The files attribute expects a list of files where the name entry referrs to the file name used on crowdin and the source entry to the corresponding file in your project.
+This also allows you to batch upload strings.xml files from separate modules.
+
+## Branches
+
+You can also use the version management features of crowdin.
+This allows you to upload your files separately for each of your release and feature branches. For more details visit the [official documentation](https://support.crowdin.com/versions-management/).
+
+The following snippet gets the currently checked out branch automatically
+
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath 'org.ajoberstar:grgit:1.9.0'
+        }
+    }
+
+    ext {
+        git = org.ajoberstar.grgit.Grgit.open()
+        gitBranchName = git.branch.getCurrent().name
+    }
+
+The branch name needs to be set for the crowdinDownload and crowdinUpload tasks.
+
+    crowdinDownload {
+        ...
+        branch = gitBranchName
+        ...
+    }
+
+    crowdinUpload {
+        ...
+        branch = gitBranchName
+        ...
+    }
+
+If the branch does not exist yet on crowdin it will be created automatically.
+Since a branch on crowdin is basically a special folder all translation files will be copied to the newly created branch.
+Therefore if you have set a title or the 'resulting file' field on crowdin and you want to keep them also for your newly created branches you need to specify the title and/or translation fields as well.
+
+    crowdinUpload {
+        ...
+        files = [
+            [
+                    title      : 'App',  // Artifact name shown to the translators (optional)
+                    name       : 'strings.xml',  // File name used on crowdin
+                    source     : 'app/src/main/res/values/strings.xml', // File that should be translated
+                    translation: 'app/src/main/res/values-%android_code%/strings.xml' // Path to store the translation (optional)
+            ]
+        ]
+        ...
+    }
+
 ## Screenshot
  
 In IDEA, the task should appear under the category crowdin as shown here
