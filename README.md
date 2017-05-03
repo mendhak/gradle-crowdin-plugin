@@ -11,7 +11,7 @@ This Gradle plugin adds tasks to upload and download translation files from crow
 Add this to your build.gradle:
 
     plugins {
-      id "com.mendhak.gradlecrowdin" version "0.0.9"
+      id "com.mendhak.gradlecrowdin" version "0.1.0"
     }
 
 For pre-Gradle-2.1, follow the [instructions here](https://plugins.gradle.org/plugin/com.mendhak.gradlecrowdin)
@@ -158,9 +158,9 @@ In IDEA, the task should appear under the category crowdin as shown here
 
 ## Building
 
-To build, run the uploadArchives task under upload.  This doesn't actually upload it anywhere, it just copies it to the 'repo' folder.
+To build, run the `uploadArchives` task under upload.  This doesn't actually upload it anywhere, it just copies it to the 'repo' folder.
  
-To reference it in another project locally, modify the gradle file to look like so:
+You can then reference it in another project locally, modify the gradle file to look like so:
  
     buildscript {
         repositories {
@@ -170,8 +170,10 @@ To reference it in another project locally, modify the gradle file to look like 
                 }
         }
         dependencies {
-            classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.0.9'
+            classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.1.0'
         }
     }
     
     apply plugin: 'com.mendhak.gradlecrowdin'
+
+A maintainer can then publish to Maven using the `bintrayUpload` task, and to the Gradle using `publishPlugins` 
