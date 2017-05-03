@@ -133,6 +133,7 @@ The branch name needs to be set for the crowdinDownload and crowdinUpload tasks.
     }
 
 If the branch does not exist yet on crowdin it will be created automatically.
+Keep in mind that the characters \ / : * ? " < > | are not allowed in crowdin branch names and will be replaced with underscores by this crowdin plugin.
 Since a branch on crowdin is basically a special folder all translation files will be copied to the newly created branch.
 Therefore if you have set a title or the 'resulting file' field on crowdin and you want to keep them also for your newly created branches you need to specify the title and/or translation fields as well.
 
