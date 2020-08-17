@@ -6,6 +6,8 @@ import org.gradle.api.tasks.TaskAction
 
 class DownloadTranslationsTask extends DefaultTask {
     def destination
+    def username
+    def accountKey
     def apiKey
     def projectId
     def renameMapping
@@ -20,7 +22,12 @@ class DownloadTranslationsTask extends DefaultTask {
         buildSubDir.mkdirs()
 
         //Tell Crowdin to do an export
-        def exportUrl = sprintf('https://api.crowdin.com/api/project/%s/export?key=%s', [projectId, apiKey])
+        def exportUrl = sprintf('https://api.crowdin.com/api/project/%s/export?', [projectId])
+        if (username != null && accountKey != null) {
+            exportUrl += sprintf('login=%s&account-key=%s', [username, accountKey])
+        } else {
+            exportUrl += sprintf('key=%s', apiKey)
+        }
         if (branch != null) {
             exportUrl += '&branch=' + branchEncoded
         }
@@ -28,7 +35,12 @@ class DownloadTranslationsTask extends DefaultTask {
         ant.get(src: exportUrl, dest: new File(buildSubDir.getPath(), "export.xml"), verbose: true)
 
         //Download actual zip file
-        def url = sprintf('https://api.crowdin.com/api/project/%s/download/%s.zip?key=%s', [projectId, 'all', apiKey])
+        def url = sprintf('https://api.crowdin.com/api/project/%s/download/%s.zip?', [projectId, 'all'])
+        if (username != null && accountKey != null) {
+            url += sprintf('login=%s&account-key=%s', [username, accountKey])
+        } else {
+            url += sprintf('key=%s', apiKey)
+        }
         if (branch != null) {
             url += '&branch=' + branchEncoded
         }

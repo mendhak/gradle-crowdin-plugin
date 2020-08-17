@@ -11,6 +11,8 @@ import org.apache.http.entity.mime.content.FileBody
 
 
 class UploadSourceFileTask extends DefaultTask {
+    def username
+    def accountKey
     def apiKey
     def projectId
     def files
@@ -27,7 +29,12 @@ class UploadSourceFileTask extends DefaultTask {
             uploadType = 'update'
         }
 
-        def updateFilePath = sprintf('https://api.crowdin.com/api/project/%s/%s-file?key=%s', [projectId, uploadType, apiKey])
+        def updateFilePath = sprintf('https://api.crowdin.com/api/project/%s/%s-file?', [projectId, uploadType])
+        if (username != null && accountKey != null) {
+             updateFilePath += sprintf('login=%s&account-key=%s', [username, accountKey])
+        } else {
+            updateFilePath += 'key=' + apiKey
+        }
         if (branch != null) {
             updateFilePath += '&branch=' + branchEncoded
         }
@@ -62,7 +69,14 @@ class UploadSourceFileTask extends DefaultTask {
      * */
     private boolean createBranch(String branchEncoded) {
         def created = false
-        def addBranchPath = sprintf('https://api.crowdin.com/api/project/%s/add-directory?key=%s&name=%s&is_branch=1', [projectId, apiKey, branchEncoded])
+        def addBranchPath = sprintf('https://api.crowdin.com/api/project/%s/add-directory?', [projectId])
+        if (username != null && accountKey != null) {
+            addBranchPath += sprintf('login=%s&account-key=%s', [username, accountKey])
+        } else {
+            addBranchPath += sprintf('key=%s', apiKey)
+        }
+        addBranchPath += sprintf("&name=%s&is_branch=1", [branchEncoded])
+
         new HTTPBuilder(addBranchPath).request(Method.POST, ContentType.ANY) { req ->
             response.failure = { resp, reader ->
                 if (reader.code.text() != '50') {

@@ -5,6 +5,8 @@ This Gradle plugin adds tasks to upload and download translation files from crow
 
 `crowdinDownload` downloads the latest translations and `crowdinUpload` uploads a source file. 
 
+Uses API v1.
+
 
 ## Usage
 
@@ -96,6 +98,25 @@ Point this at your source file, such as `values/strings.xml` and the task will u
 Note that the file must exist on crowdin, this simply acts as an updater. New files are not created.
 The files attribute expects a list of files where the name entry referrs to the file name used on crowdin and the source entry to the corresponding file in your project.
 This also allows you to batch upload strings.xml files from separate modules.
+
+## Identification
+
+Either use the combination of project identifier(**projectId**) and project key(**apiKey**) or combination of project identifier(**projectId**), username(**username**), and account key(**accountKey**) to authorize yourself.
+If they are all present in the configuration file, the second option is prioritized.
+
+    crowdinDownload {
+        
+        projectId = PROJECT_ID
+        
+        //First option
+        apiKey = CROWDIN_API_KEY
+        
+        //Second option, prioritized
+        username = USERNAME
+        accountKey = ACCOUNT_KEY
+        
+        //...
+    }
 
 ## Branches
 
