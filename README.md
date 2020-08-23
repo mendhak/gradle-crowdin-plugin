@@ -13,7 +13,7 @@ Uses API v1.
 Add this to your build.gradle:
 
     plugins {
-      id "com.mendhak.gradlecrowdin" version "0.1.0"
+      id "com.mendhak.gradlecrowdin" version "0.1.1"
     }
 
 For pre-Gradle-2.1, follow the [instructions here](https://plugins.gradle.org/plugin/com.mendhak.gradlecrowdin)
@@ -191,10 +191,14 @@ You can then reference it in another project locally, modify the gradle file to 
                 }
         }
         dependencies {
-            classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.1.0'
+            classpath 'com.mendhak.gradlecrowdin:crowdin-plugin:0.1.1'
         }
     }
     
     apply plugin: 'com.mendhak.gradlecrowdin'
 
-A maintainer can then publish to Maven using the `bintrayUpload` task, and to the Gradle using `publishPlugins` 
+I then publish to Maven using the `./gradlew bintrayUpload` task, and to the Gradle using `./gradlew publishPlugins` 
+
+### 2020 Note
+
+This is running on an old version of Gradle.  I tried upgrading and nothing would build or run; the errors were cryptic and the stack traces were useless.  I had to stick to OpenJDK 1.8, Gradle 2.6.  

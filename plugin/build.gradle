@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+        classpath "com.gradle.publish:plugin-publish-plugin:0.12.0"
     }
 }
 
@@ -30,7 +30,7 @@ dependencies {
 }
 
 group = 'com.mendhak.gradlecrowdin'
-version = '0.1.0'
+version = '0.1.1'
 project.archivesBaseName='crowdin-plugin'
 project.ext.set("version", version)
 project.description='Gradle plugin for Crowdin.com, download and upload translation files'
